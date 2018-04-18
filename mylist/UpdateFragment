@@ -1,0 +1,76 @@
+import android.app.Activity;
+import android.app.FragmentManager;
+import android.net.Uri;
+import android.os.Bundle;
+import android.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+
+
+public class UpdateFragment extends Fragment implements View.OnClickListener {
+    FragmentManager fm;
+    DBAdapter dba;
+    Button plus, minus, done;
+    String item;
+    TextView total;
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        dba = new DBAdapter(getActivity());
+        dba.open();
+    }
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        final View view = inflater.inflate(R.layout.fragment_update, container, false);
+        plus = (Button) view.findViewById(R.id.plus);
+        minus = (Button) view.findViewById(R.id.minus);
+        done = (Button) view.findViewById(R.id.done);
+        plus.setOnClickListener(this);
+        minus.setOnClickListener(this);
+        done.setOnClickListener(this);
+        return view;
+    }
+
+    @Override
+    public void onClick(View v) {
+        fm = getFragmentManager();
+        String selection;
+        switch (v.getId()) {
+            case R.id.plus:
+                selection = ((TextView) getActivity().findViewById(R.id.text_update)).getText().toString();
+                if(dba.contains(selection)) {
+                   dba.increment(selection);
+                } else{
+                    dba.storeItem(selection, 1);
+                }
+                fm.findFragmentById(R.id.fragment_list).onCreate(getArguments());
+                total = (TextView) getActivity().findViewById(R.id.total_amount_text);
+                total.setText(""+(int)dba.getTotal());
+                break;
+            case R.id.minus:
+                selection = ((TextView) getActivity().findViewById(R.id.text_update)).getText().toString();
+                if(dba.contains(selection)) {
+                   dba.decrement(selection);
+                }
+                fm.findFragmentById(R.id.fragment_list).onCreate(getArguments());
+                total = (TextView) getActivity().findViewById(R.id.total_amount_text);
+                total.setText(""+(int)dba.getTotal());
+                break;
+            case R.id.done:
+                fm.beginTransaction().hide(fm.findFragmentById(R.id.update)).commit();
+                fm.beginTransaction().show(fm.findFragmentById(R.id.search_fragment)).commit();
+                TextView totals = (TextView) getActivity().findViewById(R.id.total_amount_text);
+                totals.setText(""+(int)dba.getTotal());
+                break;
+        }
+        fm.findFragmentById(R.id.fragment_list).onCreate(getArguments());
+        TextView total = (TextView)getActivity().findViewById(R.id.total_amount_text);
+        total.setText(""+(int)dba.getTotal());
+    }
+}
