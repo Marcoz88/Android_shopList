@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resources>
+
+    <string name="app_name">MyList</string>
+
+    <string name="hello_world">Hello world!</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="item_show">Item</string>
+
+    <string name="amount_show">Amount</string>
+
+    <string name="OK">OK</string>
+
+    <string name="DONE">Done</string>
+
+    <string name="plus">plusS</string>
+
+    <string name="minus">minusS</string>
+
+    <string name="total">total</string>
+
+</resources>
