@@ -1,8 +1,7 @@
 # Android_shopList
 
-A simple shopping list application. 
-The user should be able to see the items currently on the list, add an item and an amount of that item, 
-and increase/decrease that amount later.
+A simple shopping list application, through which the user is able to see the items currently on the list, 
+add an item with the related amount, and increase/decrease that amount later.
 
 Architecture:
 The app relies on a SQLite database to save contents in, and have both a helper and
