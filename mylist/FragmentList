@@ -1,0 +1,52 @@
+import android.app.FragmentManager;
+import android.app.ListFragment;
+import android.database.Cursor;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
+
+public class FragmentList extends ListFragment {
+    public DBAdapter dba;
+    private Cursor cursor;
+
+    public FragmentList() {
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_item_list, container, false);
+        return view;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        dba = new DBAdapter(getActivity());
+        dba.open();
+        cursor = dba.getItems();
+        String[] from = new String[] { "name", "amount" };
+        int[] to = new int[] { R.id.item_col, R.id.amount_col };
+        getActivity().startManagingCursor(cursor);
+        SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(getActivity(), R.layout.fragment_set_col, cursor, from, to);
+        setListAdapter(cursorAdapter);
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        FragmentManager fm = getFragmentManager();
+        fm.beginTransaction().hide(fm.findFragmentById(R.id.search_fragment)).commit();
+        fm.beginTransaction().show(fm.findFragmentById(R.id.update)).commit();
+        cursor = (Cursor) l.getItemAtPosition(position);
+        getActivity().startManagingCursor(cursor);
+        String selection = cursor.getString(cursor.getColumnIndexOrThrow("name"));
+        TextView text = (TextView)getActivity().findViewById(R.id.item_text);
+        text.setText(selection);
+        text = (TextView)getActivity().findViewById(R.id.text_update);
+        text.setText(selection);
+    }
+}
